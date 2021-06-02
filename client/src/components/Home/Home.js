@@ -24,10 +24,6 @@ const Home = () => {
     const page = query.get('page') || 1 //check if we have page param in URL
     const searchQuery = query.get('searchQuery')
 
-    useEffect(() => {
-        dispatch(getPosts());
-    }, [currentId, dispatch]);
-
     const searchPost = () => {
         if (search.trim() || tags) {
             dispatch(getPostsBySearch({ search, tags: tags.join(',') }))
@@ -50,7 +46,7 @@ const Home = () => {
     return (
         <Grow in>
             <Container maxWidth="xl">
-                <Grid container className={classes.mainContainer} justify="space-between" alignItems="stretch" spacing={3} className={classes.gridContainer}>
+                <Grid container className={classes.gridContainer} justify="space-between" alignItems="stretch" spacing={3}>
                 <Grid item xs={12} sm={6} md={9}>
                     <Posts setCurrentId={setCurrentId}/>
                 </Grid>
@@ -76,9 +72,11 @@ const Home = () => {
                     <Button onClick={searchPost} className={classes.searchButton} variant="contained" color="primary">Search</Button>
                 </AppBar>
                     <Form currentId={currentId} setCurrentId={setCurrentId}/>
-                    <Paper elevation={6}>
-                        <Pagination/>
-                    </Paper>
+                    {(!searchQuery && !tags.length) && (
+                        <Paper elevation={6} className={classes.pagination}>
+                            <Pagination page={page}/>
+                        </Paper>
+                    )}
                 </Grid>
                 </Grid>
             </Container>
